@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
+use App\GraphQL\Mutations\PostMutation;
+use App\GraphQL\Mutations\UserMutation;
+use App\GraphQL\Queries\PostQuery;
+use App\GraphQL\Queries\UserPaginateQuery;
 use App\GraphQL\Queries\UserQuery;
+use App\GraphQL\Types\PostType;
 use App\GraphQL\Types\UserType;
 
 return [
@@ -40,7 +45,7 @@ return [
     //     'mutation' => '\Rebing\GraphQL\GraphQLController@mutation'
     // ]
     //
-    'controllers' => \Rebing\GraphQL\GraphQLController::class.'@query',
+    'controllers' => \Rebing\GraphQL\GraphQLController::class . '@query',
 
     // Any middleware for the graphql route group
     'middleware' => [],
@@ -61,10 +66,13 @@ return [
     'schemas' => [
         'default' => [
             'query' => [
-                 'user_query' => UserQuery::class,
+                'user_query' => UserQuery::class,
+                'post_query' => PostQuery::class,
+                'user_paginate_query' => UserPaginateQuery::class
             ],
             'mutation' => [
-                // 'example_mutation'  => ExampleMutation::class,
+                'post_mutation' => PostMutation::class,
+                'user_mutation' => UserMutation::class,
             ],
             'middleware' => [],
             'method'     => ['get', 'post'],
@@ -73,9 +81,7 @@ return [
 
     'types' => [
         'user_type' => UserType::class,
-        // 'example'           => ExampleType::class,
-        // 'relation_example'  => ExampleRelationType::class,
-        // \Rebing\GraphQL\Support\UploadType::class,
+        'post_type' => PostType::class,
     ],
 
     // The types will be loaded on demand. Default is to load all types on each request
@@ -126,7 +132,7 @@ return [
      */
     'graphiql' => [
         'prefix'     => '/graphiql',
-        'controller' => \Rebing\GraphQL\GraphQLController::class.'@graphiql',
+        'controller' => \Rebing\GraphQL\GraphQLController::class . '@graphiql',
         'middleware' => [],
         'view'       => 'graphql::graphiql',
         'display'    => env('ENABLE_GRAPHIQL', true),

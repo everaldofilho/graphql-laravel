@@ -4,42 +4,41 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
 
+use App\Posts;
 use Closure;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL;
 use Rebing\GraphQL\Support\SelectFields;
 use Rebing\GraphQL\Support\Query;
-use GraphQL;
-use App\User;
 
-class UserQuery extends Query
+class PostQuery extends Query
 {
     protected $attributes = [
-        'name' => 'userQuery',
-        'description' => 'Uma query de users'
+        'name' => 'post',
+        'description' => 'A query posts'
     ];
 
     public function type(): Type
     {
-        return Type::listOf(GraphQL::type('user_type'));
+        return Type::listOf(GraphQL::type('post_type'));
     }
 
     public function args(): array
     {
         return [
-            'id' => [
+            'user_id' => [
                 'type' => Type::int(),
-                'description' => 'Id Int'
+                'description' => 'ID do usuário'
             ]
         ];
     }
 
     public function resolve($root, $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
+        /** @var SelectFields $fields */
+        $fields = $getSelectFields();
 
-        if (isset($args['id'])) {
-            return User::where('id', $args['id'])->get();
-        }
-        return User::all();
+        return Posts::all();
     }
 }
